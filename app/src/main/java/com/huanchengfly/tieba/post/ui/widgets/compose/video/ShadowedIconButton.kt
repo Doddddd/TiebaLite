@@ -7,30 +7,31 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-
 @Composable
-fun ShadowedIcon(
-    icon: ImageVector,
+fun ShadowedSymbol(
+    painter: Painter,
     modifier: Modifier = Modifier,
     iconSize: Dp = 48.dp,
 ) {
     Box(modifier = modifier) {
         Icon(
-            imageVector = icon,
+            painter = painter,
             tint = Color.Black.copy(alpha = 0.3f),
-            modifier = Modifier
-                .size(iconSize)
-                .offset(2.dp, 2.dp),
-            contentDescription = null
+            modifier =
+                Modifier
+                    .size(iconSize)
+                    .offset(2.dp, 2.dp),
+            contentDescription = null,
         )
         Icon(
-            imageVector = icon,
+            painter = painter,
+            tint = Color.White,
             modifier = Modifier.size(iconSize),
-            contentDescription = null
+            contentDescription = null,
         )
     }
 }

@@ -212,7 +212,13 @@ private fun SearchVideo(modifier: Modifier = Modifier, video: SearchMedia.Video)
             .clip(MaterialTheme.shapes.small),
         thumbnailUrl = video.thumbnail,
         onClick = {
-            VideoViewActivity.launch(context, videoUrl = video.url, thumbnailUrl = video.thumbnail)
+            VideoViewActivity.launch(
+                context,
+                videoUrl = video.url,
+                thumbnailUrl = video.thumbnail,
+                videoWidth = video.dimensions?.width ?: 0,
+                videoHeight = video.dimensions?.height ?: 0,
+            )
         }
     )
 }

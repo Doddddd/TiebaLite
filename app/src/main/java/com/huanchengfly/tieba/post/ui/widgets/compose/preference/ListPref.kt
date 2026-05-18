@@ -73,9 +73,16 @@ fun <T> SegmentedListPreference(
     shapes: ListItemShapes = ListItemDefaults.shapes(),
     enabled: Boolean = true,
     interactionSource: MutableInteractionSource? = null,
+    expanded: Boolean? = null,
+    onExpandedChange: ((Boolean) -> Unit)? = null,
 ) {
-    var expanded by remember { mutableStateOf(false) }
-    val onDismissRequest: () -> Unit = { expanded = !expanded }
+    var expandedState by remember { mutableStateOf(false) }
+    val isExpanded = expanded ?: expandedState
+    val onDismissRequest: () -> Unit = {
+        val newExpanded = !isExpanded
+        expandedState = newExpanded
+        onExpandedChange?.invoke(newExpanded)
+    }
 
     val menuPressOffsetY = LocalMinimumInteractiveComponentSize.current / 2
     var menuPressOffsetX by remember { mutableIntStateOf(0) }
@@ -89,31 +96,39 @@ fun <T> SegmentedListPreference(
     }
 
     SegmentedPreference(
+        modifier = modifier,
         title = title,
         shapes = shapes,
         enabled = enabled,
         leadingIcon = leadingIcon,
-        summary = if (useSelectedAsSummary) options[value] else summary,
+        summary =
+            if (useSelectedAsSummary) {
+                options[value]
+            } else {
+                summary
+            },
         interactionSource = interactionSource,
         onClick = onDismissRequest,
     )
 
     Box(
-        modifier = Modifier.offset {
-            IntOffset(x = menuPressOffsetX, y = -menuPressOffsetY.roundToPx())
-        },
+        modifier =
+            Modifier.offset {
+                IntOffset(x = menuPressOffsetX, y = -menuPressOffsetY.roundToPx())
+            },
     ) {
         DropdownMenuPopup(
-            expanded = expanded,
+            expanded = isExpanded,
             onDismissRequest = onDismissRequest,
             offset = DpOffset.Zero,
         ) {
             val itemShapes = MenuDefaults.itemShapes() // Single group
-            val itemContentPadding = if (optionsIconSupplier == null) {
-                MenuDefaults.DropdownMenuSelectableItemContentPadding
-            } else {
-                MenuDefaults.DropdownMenuItemContentPadding
-            }
+            val itemContentPadding =
+                if (optionsIconSupplier == null) {
+                    MenuDefaults.DropdownMenuSelectableItemContentPadding
+                } else {
+                    MenuDefaults.DropdownMenuItemContentPadding
+                }
 
             DropdownMenuGroup(
                 shapes = MenuDefaults.groupShapes(),
@@ -123,19 +138,22 @@ fun <T> SegmentedListPreference(
                     DropdownMenuItem(
                         text = { Text(text = optionLabel) },
                         shapes = itemShapes,
-                        leadingIcon = optionsIconSupplier?.let { {
-                            Box(
-                                modifier = Modifier.size(MenuItemLeadingIconSize),
-                                contentAlignment = Alignment.Center,
-                                content = { optionsIconSupplier(option) }
-                            )
-                        } },
+                        leadingIcon =
+                            optionsIconSupplier?.let {
+                                {
+                                    Box(
+                                        modifier = Modifier.size(MenuItemLeadingIconSize),
+                                        contentAlignment = Alignment.Center,
+                                        content = { optionsIconSupplier(option) },
+                                    )
+                                }
+                            },
                         trailingIcon = {
                             if (checked) {
                                 Icon(
                                     imageVector = Icons.Rounded.Check,
                                     modifier = Modifier.size(MenuDefaults.LeadingIconSize),
-                                    contentDescription = null
+                                    contentDescription = null,
                                 )
                             } else {
                                 Spacer(modifier = Modifier.size(MenuDefaults.LeadingIconSize))

@@ -8,7 +8,6 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.github.iielse.imageviewer.core.ImageLoader
 import com.github.iielse.imageviewer.core.Photo
-import com.github.iielse.imageviewer.widgets.video.ExoVideoView2
 import com.huanchengfly.tieba.post.R
 import com.huanchengfly.tieba.post.components.glide.ProgressListenerOnUI
 import com.huanchengfly.tieba.post.components.glide.TbGlideUrl
@@ -46,10 +45,6 @@ class SimpleImageLoader(
                 } else it
             }
             .into(view)
-    }
-
-    override fun load(exoVideoView: ExoVideoView2, data: Photo, viewHolder: RecyclerView.ViewHolder) {
-        throw RuntimeException("Stub!")
     }
 
     override fun load(subsamplingView: SubsamplingScaleImageView, data: Photo, viewHolder: RecyclerView.ViewHolder) {

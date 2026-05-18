@@ -6,6 +6,7 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.content.ComponentCallbacks2
 import android.os.PowerManager
 import android.os.Process
 import android.webkit.WebView
@@ -17,6 +18,7 @@ import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import com.huanchengfly.tieba.post.activities.CrashActivity
 import com.huanchengfly.tieba.post.components.ConfigInitializer
+import com.huanchengfly.tieba.post.components.MediaCache
 import com.huanchengfly.tieba.post.di.RepositoryEntryPoint
 import com.huanchengfly.tieba.post.repository.user.SettingsRepository
 import com.huanchengfly.tieba.post.utils.EmoticonManager
@@ -91,6 +93,13 @@ class App : Application(), Configuration.Provider {
     //解决魅族 Flyme 系统夜间模式强制反色
     @Keep
     fun mzNightModeUseOf(): Int = 2
+
+    override fun onTrimMemory(level: Int) {
+        super.onTrimMemory(level)
+        if (level == ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
+            MediaCache.release()
+        }
+    }
 
     /**
      * 添加Activity
